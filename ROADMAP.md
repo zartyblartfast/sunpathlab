@@ -4,7 +4,12 @@ Last updated: September 2026
 
 ## 1. Purpose
 
-Solar Path Lab is intended to become an interactive visual explanation of:
+The main purpose is to make the differences in Sun paths and angles between
+standard globe geometry and an explicitly defined hypothetical flat Earth obvious.
+The side-by-side comparison remains the primary experience; annual and orbital
+explanations support it rather than turn the app into a general astronomy simulator.
+
+Solar Path Lab is intended to support that comparison through interactive visual explanations of:
 
 - Daily Sun paths
 - Seasonal changes in solar altitude and azimuth
@@ -28,7 +33,11 @@ A user should be able to choose a location, date and time and answer four questi
 3. What does each stated model predict?
 4. How can the prediction be checked by direct observation?
 
-The most important long-term experience will link three synchronized views:
+The primary experience is a clear comparison of both models' paths, altitudes,
+azimuths and measurable consequences for the same selected setup. Results must
+remain calculated, including cases where the predictions happen to be close.
+
+A supporting long-term explanation will link three synchronized views:
 
 1. Earth’s orbit and axial orientation
 2. The observer’s position on Earth
@@ -221,7 +230,7 @@ These targets should be reviewed in `MODEL_SPECIFICATION.md` rather than silentl
 Automated tests should confirm that:
 
 - A Sun at a positive fixed height remains above an unobstructed infinite plane at every finite distance.
-- Increasing Sun height increases predicted altitude for the same horizontal distance.
+- Increasing positive Sun height strictly increases predicted altitude at a fixed positive horizontal distance; directly overhead (`d = 0`), altitude remains `90°`.
 - Predicted altitude approaches zero as horizontal distance approaches infinity.
 - Morning and afternoon results are symmetrical around solar noon when the other inputs remain unchanged.
 - Horizontal and slant distances are never negative.
@@ -278,6 +287,24 @@ A map selector may be considered later, but it should not delay reliable coordin
 ### Goal
 
 Show what an analemma is, how it is generated and why it normally forms a figure-eight pattern.
+
+### Calculation prerequisite
+
+Before adding independent tilt/eccentricity controls, implement and validate a
+parameterized orbital calculation model as part of this milestone. The existing
+compact USNO calculation does not expose those parameters independently.
+
+- Define eccentricity, obliquity, orbital phase and perihelion orientation or epoch.
+- Validate the full, tilt-only, eccentricity-only and uniform-reference scenarios.
+- Specify the mean-Sun/time convention for each scenario and compare the full
+  scenario with independent reference data under compatible assumptions.
+- Keep this experimental model distinct from the existing standard calculation;
+  do not silently replace the validated baseline.
+- Do not assume tilt-only and eccentricity-only results add linearly.
+
+This work is required for milestone 0.4's component experiments. Milestone 0.5
+adds their linked visualization, not the first implementation of their mathematics.
+See `MODEL_SPECIFICATION.md` section 19.8.
 
 ### Core experience
 
@@ -344,7 +371,7 @@ Civil time and daylight-saving time may be offered as optional demonstrations, b
 - The plot changes correctly with latitude and observation time.
 - Disabling orbital eccentricity removes its contribution to the Equation of Time.
 - Disabling axial tilt removes the seasonal declination cycle and its Equation of Time contribution.
-- Combining both effects recreates the complete calculated analemma.
+- Enabling both effects in the same parameterized orbital model recreates its full calculated analemma; this is not a requirement to sum the two isolated experimental curves.
 - The explanation works without requiring the user to read the formulas.
 
 ## 10. Milestone 0.5 — linked orbit, Earth and observer views

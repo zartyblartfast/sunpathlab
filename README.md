@@ -45,7 +45,15 @@ The current version focuses on comparing daily Sun paths. Planned development in
 
 ## Purpose
 
-The app is designed to make the geometry understandable to non-specialists.
+The app's main purpose is to make the differences in predicted Sun paths,
+altitudes and azimuths between standard globe geometry and an explicitly defined
+hypothetical flat Earth obvious to non-specialists. Side-by-side paths, angles
+and shadow predictions are the core experience. Analemmas and orbital views
+should support that comparison rather than replace it.
+
+The comparison applies to the stated hypothetical model, not every possible
+alternative model. Similar predictions at one instant do not establish agreement
+over a complete day, season or range of latitudes.
 
 Many Sun-path discussions combine several different effects:
 
@@ -59,7 +67,9 @@ Many Sun-path discussions combine several different effects:
 - Perspective
 - Atmospheric refraction
 
-Solar Path Lab separates these effects and shows how each one changes a measurable prediction.
+The development goal is to separate these effects and show how each changes a
+measurable prediction. The current prototype does not yet expose all of them as
+independent controls.
 
 The guiding principle is:
 
@@ -151,7 +161,15 @@ Alternatively, the predicted shadow length is:
 shadow length = stick height ÷ tan(solar altitude)
 ```
 
-This provides a direct comparison between calculation and observation without requiring specialist photographic equipment.
+These formulas assume effectively parallel rays across the stick. The prototype
+uses that approximation for both models; it is not exact for a nearby local Sun.
+It is useful when the stick is very short compared with the local-Sun height,
+but can be inaccurate at the allowed input extremes. See
+[the shadow-model specification](MODEL_SPECIFICATION.md#163-finite-source-geometry)
+for the finite-source geometry and the distinction between current and target behavior.
+
+Within those assumptions, this provides a direct comparison between calculation
+and observation without requiring specialist photographic equipment.
 
 Measurements close to the horizon require extra care because terrain, buildings, observer height and atmospheric refraction can affect visibility.
 
@@ -203,16 +221,35 @@ http://localhost:8000
 
 Because the app uses only HTML, CSS and JavaScript, it can also be hosted by any ordinary static-file web server.
 
+## Prototype regression tests
+
+With Node.js 22 or newer, run from the repository root:
+
+```bash
+node --test tests/prototype.test.cjs
+```
+
+No package installation is needed. These characterization tests preserve the
+prototype's numerical outputs; they are not independent scientific validation.
+See [tests/README.md](tests/README.md) for provenance, coverage and known gaps.
+
 ## Repository structure
 
 ```text
 sunpathlab/
 ├── .openai/
 │   └── hosting.json
-└── dist/
-    ├── index.html
-    ├── styles.css
-    └── app.js
+├── dist/
+│   ├── index.html
+│   ├── styles.css
+│   └── app.js
+└── tests/
+    ├── README.md
+    ├── prototype.test.cjs
+    ├── fixtures/
+    │   └── prototype-v0.1.json
+    └── support/
+        └── prototype.cjs
 ```
 
 - `dist/index.html` contains the interface and explanatory content.
@@ -220,7 +257,10 @@ sunpathlab/
 - `dist/app.js` contains the calculations, state management and diagram rendering.
 - `.openai/hosting.json` contains the existing deployment configuration.
 
-The project was initially exported as a compact static application. A future development task may introduce a separate `src` directory, automated tests and a repeatable build process while retaining static deployment.
+The project was initially exported as a compact static application. Prototype
+characterization tests now preserve its numerical baseline. A future development
+task may introduce a separate `src` directory, independent calculation validation
+and a repeatable build process while retaining static deployment.
 
 ## Accuracy and limitations
 

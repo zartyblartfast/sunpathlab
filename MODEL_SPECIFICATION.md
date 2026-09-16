@@ -1,12 +1,26 @@
 # Solar Path Lab Model Specification
 
-Status: Initial specification  
-Specification version: 0.1  
+Status: Working draft — agent-authored, pending scientific validation
+
+Specification version: 0.1.1
+
 Applies to application version: 0.1 and planned 0.x development
+
+This document was initially authored by an agent, not supplied as an approved
+scientific specification. It records the prototype and proposed requirements;
+neither its presence nor passing characterization tests establishes correctness.
+Revision 0.1.1 clarifies the contract without changing application calculations
+or the baseline model identifiers.
 
 ## 1. Purpose
 
 This document defines the mathematical models, coordinate conventions, time conventions, constants, assumptions and expected behavior used by Solar Path Lab.
+
+The application's primary purpose is to make differences in predicted Sun paths
+and angles between standard globe geometry and a stated hypothetical flat Earth
+obvious. Explanatory orbital and analemma features serve that comparison.
+Calculations MUST remain faithful to each model even where their predictions
+are close; diagrams must not exaggerate numerical discrepancies.
 
 It has four purposes:
 
@@ -75,6 +89,13 @@ The words `MUST`, `MUST NOT`, `SHOULD`, `SHOULD NOT` and `MAY` describe implemen
 Sections marked **Current behavior** describe the existing prototype.
 
 Sections marked **Target behavior** describe behavior required during the next development stages.
+
+Normative requirements describe the intended contract, not a claim that the
+prototype already satisfies it. Sections 19–20 and interfaces/records in sections
+26–27 are targets, not implemented features. The model identifiers in section 2
+are specified identifiers; the current prototype does not emit them in result
+records. Section 28.1 tracks confirmed discrepancies separately from deliberate
+baseline approximations.
 
 ## 5. Coordinate and sign conventions
 
@@ -835,13 +856,14 @@ Ls = horizontal shadow length
 a  = solar altitude
 ```
 
-For a Sun above the horizontal:
+**Current behavior:** the prototype applies the following parallel-ray
+approximation to both models for a Sun above the horizontal:
 
 ```text
 Ls = Hs ÷ tan(a)
 ```
 
-The inverse measurement is:
+The corresponding inverse measurement under that approximation is:
 
 ```text
 a_observed = atan2(Hs, Ls)
@@ -853,7 +875,9 @@ If:
 a ≤ 0°
 ```
 
-the model predicts no direct solar shadow on an unobstructed horizontal surface.
+the prototype returns no direct solar shadow. This is a geometric centre-ray
+rule, not a full visibility calculation: solar-limb and refraction effects close
+to the horizon are excluded.
 
 ### 16.1 Shadow direction
 
@@ -873,9 +897,42 @@ The basic shadow calculation assumes:
 - Negligible stick thickness
 - No nearby obstruction
 - Sun treated by its centre direction
+- Effectively parallel rays across the stick (an approximation for the local Sun)
 - Stick and shadow lengths use the same physical unit
 
 Measurement uncertainty should be shown when observation recording is implemented.
+
+### 16.3 Finite-source geometry
+
+For a point-like local source at height `h`, horizontal distance `d` from the
+stick base, and a vertical stick of height `Hs`, similar triangles give:
+
+```text
+Ls = Hs × d ÷ (h − Hs), for h > Hs > 0
+```
+
+All three input lengths MUST first use the same unit. This follows by extending
+the straight ray from the source through the stick tip to the ground plane.
+For `d = 0` and `h > Hs`, shadow length is zero in the zero-thickness-stick model.
+The formula is not a valid finite-shadow rule for `h ≤ Hs`; an implementation
+must reject or explicitly classify that geometry rather than return a negative length.
+
+The existing formula uses the Sun's altitude at the stick base and gives
+`Ls_approx = Hs × d ÷ h`. For `d > 0`, its fractional underestimate relative to
+the finite-source result is `Hs ÷ h`. For example, `h = 10,000 m`, `d = 10,000 m`
+and `Hs = 1,000 m` give approximately `1,111.11 m`, versus the prototype's `1,000 m`.
+Those heights are permitted by the prototype, so the approximation cannot be
+described as negligible over its entire input domain.
+
+For a finite source, `atan2(Hs, Ls)` measures the incident ray angle at the stick
+tip, not exactly the solar altitude at the base. Observation comparisons must
+state that distinction or constrain the small-stick approximation.
+
+**Target behavior:** explicitly identify the baseline approximation and its
+limits. A finite-source shadow calculation is a separately tested correction,
+not part of the behavior-preserving extraction. Before implementing it, document
+its units, domain, treatment of invalid geometry, before/after results and model
+version impact. This draft does not silently change the v1 shadow outputs.
 
 ## 17. Apparent angular size
 
@@ -1280,7 +1337,7 @@ Examples include:
 - Globe altitude is symmetrical around noon when declination is fixed.
 - A positive-height flat Sun always has positive altitude at finite distance.
 - Flat-model slant distance is never less than Sun height.
-- Increasing flat-Sun height increases altitude at fixed horizontal distance.
+- Increasing positive flat-Sun height strictly increases altitude at a fixed positive horizontal distance; at zero horizontal distance, altitude stays `90°`.
 - Unit conversions do not change the physical result.
 - A shadow direction is opposite the Sun’s azimuth.
 - Analemma sampling returns 365 or 366 records as appropriate.
@@ -1331,6 +1388,16 @@ Regression tests should preserve:
 - Exported field meanings
 
 A regression test does not establish scientific correctness by itself. It only detects changes.
+
+The initial suite in `tests/prototype.test.cjs` captures outputs of the prototype
+at commit `438a6f535ad4159416d993fec47467a3f32498cf`. These are characterization
+fixtures, not previously validated scientific references. They deliberately
+record some legacy behavior, including arbitrary overhead azimuths and the
+parallel-ray shadow approximation. See `tests/README.md` for coverage and limits.
+
+When correcting a confirmed defect, first add an independent test of the desired
+behavior, document the discrepancy, and update only affected characterization
+expectations. Do not preserve a known defect merely to keep this baseline green.
 
 ## 25. Initial accuracy targets
 
@@ -1427,6 +1494,21 @@ The current prototype has the following deliberate or inherited limitations:
 15. The app is not intended for professional navigation or surveying.
 
 These limitations should be improved or explained, not hidden.
+
+### 28.1 Confirmed prototype discrepancies and target behavior
+
+These items are not fixed by this documentation revision. The behavior-preserving
+extraction must keep numerical corrections separate and reviewable.
+
+| Area | Current prototype behavior | Target contract |
+| --- | --- | --- |
+| Unit changes | Sun-height conversion rounds and then applies unit-dependent physical bounds; stick units relabel the same number. | Preserve canonical physical values and consistent physical bounds; round only for display. |
+| Time labels | The comparison table says solar time even in clock mode. | Every chart, table and export identifies its actual time basis. |
+| Prediction labels | Computed events are called observed sunrise/sunset despite no measurement input. | Use predicted or globe-model event labels; reserve observed for measurements. |
+| Chart range | Values below −30° are drawn at −30°, creating a false plateau. | Plot actual values or explicitly clip off-scale values; never imply a different numerical altitude. |
+| Invalid inputs | A blank date silently uses 2026-03-20; numeric fallback/clamping can disagree with visible inputs. | Explain invalid/incomplete inputs or show unavailable results; disclose any corrected input. |
+| Overhead direction | Exact overhead cases return arbitrary numerical azimuths. | Expose undefined direction explicitly; retain the well-defined altitude. |
+| Shadows | The same parallel-ray approximation is used for a distant and local Sun. | Disclose the approximation and limits; treat finite-source geometry as a separate tested correction (section 16.3). |
 
 ## 29. Model integrity rules
 

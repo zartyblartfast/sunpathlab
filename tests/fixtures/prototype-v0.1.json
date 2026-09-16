@@ -1,0 +1,700 @@
+{
+  "provenance": {
+    "commit": "438a6f535ad4159416d993fec47467a3f32498cf",
+    "source": "dist/app.js",
+    "kind": "prototype characterization, NOT independent scientific reference",
+    "runtime": "v24.14.1"
+  },
+  "cases": [
+    {
+      "name": "default rounded sunset",
+      "input": {
+        "latitude": 54.2,
+        "date": {
+          "year": 2026,
+          "month": 3,
+          "day": 20
+        },
+        "inputMinutes": 1085,
+        "clockMode": false,
+        "longitude": 0,
+        "utcOffset": 0,
+        "heightKm": 6437.376,
+        "stickHeight": 1
+      },
+      "expected": {
+        "terms": {
+          "declination": -0.04399446918288479,
+          "equationOfTime": -7.464142157919923
+        },
+        "snapshot": {
+          "inputMinutes": 1085,
+          "solarMinutes": 1085,
+          "globe": {
+            "altitude": -0.7668440882128384,
+            "azimuth": 270.9881516361273,
+            "hourAngle": 91.25
+          },
+          "flat": {
+            "altitude": 30.668988164492482,
+            "azimuth": 292.75795870733725,
+            "hourAngle": 91.25,
+            "observerRadius": 3980.7783738752028,
+            "sunTrackRadius": 10012.435359783845,
+            "horizontalDistance": 10855.156494775572,
+            "slantDistance": 12620.38954594684
+          }
+        },
+        "events": {
+          "type": "normal",
+          "rise": 354.54549363095214,
+          "set": 1085.454506369048
+        },
+        "eventInputMinutes": {
+          "rise": 354.545493630952,
+          "set": 1085.454506369048
+        },
+        "shadows": {
+          "globe": null,
+          "flat": 1.686270383270384
+        }
+      }
+    },
+    {
+      "name": "northern summer noon",
+      "input": {
+        "latitude": 54.2,
+        "date": {
+          "year": 2026,
+          "month": 6,
+          "day": 21
+        },
+        "inputMinutes": 720,
+        "clockMode": false,
+        "longitude": 0,
+        "utcOffset": 0,
+        "heightKm": 6437.376,
+        "stickHeight": 1
+      },
+      "expected": {
+        "terms": {
+          "declination": 23.435443652655238,
+          "equationOfTime": -1.8267014653847582
+        },
+        "snapshot": {
+          "inputMinutes": 720,
+          "solarMinutes": 720,
+          "globe": {
+            "altitude": 59.23544365265524,
+            "azimuth": 180,
+            "hourAngle": 0
+          },
+          "flat": {
+            "altitude": 62.0135389152697,
+            "azimuth": 180,
+            "hourAngle": 0,
+            "observerRadius": 3980.7783738752028,
+            "sunTrackRadius": 7401.640960170596,
+            "horizontalDistance": 3420.862586295394,
+            "slantDistance": 7289.863551513953
+          }
+        },
+        "events": {
+          "type": "normal",
+          "rise": 204.35289192982793,
+          "set": 1235.6471080701722
+        },
+        "eventInputMinutes": {
+          "rise": 204.35289192982782,
+          "set": 1235.6471080701722
+        },
+        "shadows": {
+          "globe": 0.5952815130760696,
+          "flat": 0.5314063659316146
+        }
+      }
+    },
+    {
+      "name": "northern winter midnight",
+      "input": {
+        "latitude": 54.2,
+        "date": {
+          "year": 2026,
+          "month": 12,
+          "day": 21
+        },
+        "inputMinutes": 0,
+        "clockMode": false,
+        "longitude": 0,
+        "utcOffset": 0,
+        "heightKm": 6437.376,
+        "stickHeight": 1
+      },
+      "expected": {
+        "terms": {
+          "declination": -23.434909973617824,
+          "equationOfTime": 1.9373385123444677
+        },
+        "snapshot": {
+          "inputMinutes": 0,
+          "solarMinutes": 0,
+          "globe": {
+            "altitude": -59.234909973617825,
+            "azimuth": 0,
+            "hourAngle": -180
+          },
+          "flat": {
+            "altitude": 21.202771996221237,
+            "azimuth": 0,
+            "hourAngle": -180,
+            "observerRadius": 3980.7783738752028,
+            "sunTrackRadius": 12613.386493448557,
+            "horizontalDistance": 16594.16486732376,
+            "slantDistance": 17799.048216387815
+          }
+        },
+        "events": {
+          "type": "normal",
+          "rise": 500.0941315126672,
+          "set": 939.9058684873328
+        },
+        "eventInputMinutes": {
+          "rise": 500.0941315126672,
+          "set": 939.9058684873326
+        },
+        "shadows": {
+          "globe": null,
+          "flat": 2.5777840019479616
+        }
+      }
+    },
+    {
+      "name": "southern summer afternoon",
+      "input": {
+        "latitude": -33.9,
+        "date": {
+          "year": 2026,
+          "month": 12,
+          "day": 21
+        },
+        "inputMinutes": 900,
+        "clockMode": false,
+        "longitude": 0,
+        "utcOffset": 0,
+        "heightKm": 6437.376,
+        "stickHeight": 1
+      },
+      "expected": {
+        "terms": {
+          "declination": -23.434909973617824,
+          "equationOfTime": 1.9373385123444677
+        },
+        "snapshot": {
+          "inputMinutes": 900,
+          "solarMinutes": 900,
+          "globe": {
+            "altitude": 49.491879969855766,
+            "azimuth": 272.80186611965155,
+            "hourAngle": 45
+          },
+          "flat": {
+            "altitude": 32.367922873988356,
+            "azimuth": 298.57641125558507,
+            "hourAngle": 45,
+            "observerRadius": 13777.051411260827,
+            "sunTrackRadius": 12613.386493448557,
+            "horizontalDistance": 10156.245116013451,
+            "slantDistance": 12024.521804293221
+          }
+        },
+        "events": {
+          "type": "normal",
+          "rise": 287.673493515571,
+          "set": 1152.326506484429
+        },
+        "eventInputMinutes": {
+          "rise": 287.67349351557095,
+          "set": 1152.326506484429
+        },
+        "shadows": {
+          "globe": 0.8543258155124703,
+          "flat": 1.5776995340979696
+        }
+      }
+    },
+    {
+      "name": "equator September morning",
+      "input": {
+        "latitude": 0,
+        "date": {
+          "year": 2026,
+          "month": 9,
+          "day": 23
+        },
+        "inputMinutes": 360,
+        "clockMode": false,
+        "longitude": 0,
+        "utcOffset": 0,
+        "heightKm": 6437.376,
+        "stickHeight": 1
+      },
+      "expected": {
+        "terms": {
+          "declination": -0.1895072951648829,
+          "equationOfTime": 7.645360139112199
+        },
+        "snapshot": {
+          "inputMinutes": 360,
+          "solarMinutes": 360,
+          "globe": {
+            "altitude": 3.5083354590587305e-15,
+            "azimuth": 90.18950729516484,
+            "hourAngle": -90
+          },
+          "flat": {
+            "altitude": 24.435598677545098,
+            "azimuth": 45.060258581976086,
+            "hourAngle": -90,
+            "observerRadius": 10007.543398010286,
+            "sunTrackRadius": 10028.615647794755,
+            "horizontalDistance": 14167.711765639966,
+            "slantDistance": 15561.61516166073
+          }
+        },
+        "events": {
+          "type": "normal",
+          "rise": 356.6667817664773,
+          "set": 1083.3332182335228
+        },
+        "eventInputMinutes": {
+          "rise": 356.66678176647724,
+          "set": 1083.3332182335225
+        },
+        "shadows": {
+          "globe": 16331328683276628,
+          "flat": 2.2008519877726522
+        }
+      }
+    },
+    {
+      "name": "north polar summer",
+      "input": {
+        "latitude": 80,
+        "date": {
+          "year": 2026,
+          "month": 6,
+          "day": 21
+        },
+        "inputMinutes": 0,
+        "clockMode": false,
+        "longitude": 0,
+        "utcOffset": 0,
+        "heightKm": 6437.376,
+        "stickHeight": 1
+      },
+      "expected": {
+        "terms": {
+          "declination": 23.435443652655238,
+          "equationOfTime": -1.8267014653847582
+        },
+        "snapshot": {
+          "inputMinutes": 0,
+          "solarMinutes": 0,
+          "globe": {
+            "altitude": 13.435443652655234,
+            "azimuth": 0,
+            "hourAngle": -180
+          },
+          "flat": {
+            "altitude": 37.093998529127624,
+            "azimuth": 0,
+            "hourAngle": -180,
+            "observerRadius": 1111.9492664455872,
+            "sunTrackRadius": 7401.640960170596,
+            "horizontalDistance": 8513.590226616183,
+            "slantDistance": 10673.379423224427
+          }
+        },
+        "events": {
+          "type": "midnight-sun",
+          "rise": null,
+          "set": null
+        },
+        "eventInputMinutes": null,
+        "shadows": {
+          "globe": 4.186072280882694,
+          "flat": 1.3225249273331532
+        }
+      }
+    },
+    {
+      "name": "north polar winter",
+      "input": {
+        "latitude": 80,
+        "date": {
+          "year": 2026,
+          "month": 12,
+          "day": 21
+        },
+        "inputMinutes": 720,
+        "clockMode": false,
+        "longitude": 0,
+        "utcOffset": 0,
+        "heightKm": 6437.376,
+        "stickHeight": 1
+      },
+      "expected": {
+        "terms": {
+          "declination": -23.434909973617824,
+          "equationOfTime": 1.9373385123444677
+        },
+        "snapshot": {
+          "inputMinutes": 720,
+          "solarMinutes": 720,
+          "globe": {
+            "altitude": -13.434909973617819,
+            "azimuth": 180,
+            "hourAngle": 0
+          },
+          "flat": {
+            "altitude": 29.235821326470234,
+            "azimuth": 180,
+            "hourAngle": 0,
+            "observerRadius": 1111.9492664455872,
+            "sunTrackRadius": 12613.386493448557,
+            "horizontalDistance": 11501.437227002969,
+            "slantDistance": 13180.397112836386
+          }
+        },
+        "events": {
+          "type": "polar-night",
+          "rise": null,
+          "set": null
+        },
+        "eventInputMinutes": null,
+        "shadows": {
+          "globe": null,
+          "flat": 1.7866654405464224
+        }
+      }
+    },
+    {
+      "name": "south polar summer",
+      "input": {
+        "latitude": -80,
+        "date": {
+          "year": 2026,
+          "month": 12,
+          "day": 21
+        },
+        "inputMinutes": 0,
+        "clockMode": false,
+        "longitude": 0,
+        "utcOffset": 0,
+        "heightKm": 6437.376,
+        "stickHeight": 1
+      },
+      "expected": {
+        "terms": {
+          "declination": -23.434909973617824,
+          "equationOfTime": 1.9373385123444677
+        },
+        "snapshot": {
+          "inputMinutes": 0,
+          "solarMinutes": 0,
+          "globe": {
+            "altitude": 13.434909973617819,
+            "azimuth": 180,
+            "hourAngle": -180
+          },
+          "flat": {
+            "altitude": 11.54410120531275,
+            "azimuth": 0,
+            "hourAngle": -180,
+            "observerRadius": 18903.137529574986,
+            "sunTrackRadius": 12613.386493448557,
+            "horizontalDistance": 31516.524023023543,
+            "slantDistance": 32167.236378949252
+          }
+        },
+        "events": {
+          "type": "midnight-sun",
+          "rise": null,
+          "set": null
+        },
+        "eventInputMinutes": null,
+        "shadows": {
+          "globe": 4.186244821158736,
+          "flat": 4.895865026840679
+        }
+      }
+    },
+    {
+      "name": "south polar winter",
+      "input": {
+        "latitude": -80,
+        "date": {
+          "year": 2026,
+          "month": 6,
+          "day": 21
+        },
+        "inputMinutes": 720,
+        "clockMode": false,
+        "longitude": 0,
+        "utcOffset": 0,
+        "heightKm": 6437.376,
+        "stickHeight": 1
+      },
+      "expected": {
+        "terms": {
+          "declination": 23.435443652655238,
+          "equationOfTime": -1.8267014653847582
+        },
+        "snapshot": {
+          "inputMinutes": 720,
+          "solarMinutes": 720,
+          "globe": {
+            "altitude": -13.435443652655234,
+            "azimuth": 0,
+            "hourAngle": 0
+          },
+          "flat": {
+            "altitude": 29.235695335932643,
+            "azimuth": 0,
+            "hourAngle": 0,
+            "observerRadius": 18903.137529574986,
+            "sunTrackRadius": 7401.640960170596,
+            "horizontalDistance": 11501.49656940439,
+            "slantDistance": 13180.448896050428
+          }
+        },
+        "events": {
+          "type": "polar-night",
+          "rise": null,
+          "set": null
+        },
+        "eventInputMinutes": null,
+        "shadows": {
+          "globe": null,
+          "flat": 1.786674658961103
+        }
+      }
+    },
+    {
+      "name": "leap day eastern fractional offset",
+      "input": {
+        "latitude": 27.7,
+        "date": {
+          "year": 2024,
+          "month": 2,
+          "day": 29
+        },
+        "inputMinutes": 15,
+        "clockMode": true,
+        "longitude": 85.3,
+        "utcOffset": 5.75,
+        "heightKm": 4000,
+        "stickHeight": 1
+      },
+      "expected": {
+        "terms": {
+          "declination": -7.669731874403108,
+          "equationOfTime": -12.414956484019058
+        },
+        "snapshot": {
+          "inputMinutes": 15,
+          "solarMinutes": 1438.785043515981,
+          "globe": {
+            "altitude": -69.96766944779314,
+            "azimuth": 359.1212029685096,
+            "hourAngle": 179.69626087899525
+          },
+          "flat": {
+            "altitude": 12.673495178190448,
+            "azimuth": 359.81455160219593,
+            "hourAngle": 179.69626087899525,
+            "observerRadius": 6927.443929956008,
+            "sunTrackRadius": 10860.378671167975,
+            "horizontalDistance": 17787.763169019414,
+            "slantDistance": 18231.964199096146
+          }
+        },
+        "events": {
+          "type": "normal",
+          "rise": 372.41126079819753,
+          "set": 1067.5887392018026
+        },
+        "eventInputMinutes": {
+          "rise": 388.62621728221666,
+          "set": 1083.8036956858214
+        },
+        "shadows": {
+          "globe": null,
+          "flat": 4.446940792254853
+        }
+      }
+    },
+    {
+      "name": "western negative offset",
+      "input": {
+        "latitude": 40.7,
+        "date": {
+          "year": 2026,
+          "month": 11,
+          "day": 3
+        },
+        "inputMinutes": 1439,
+        "clockMode": true,
+        "longitude": -74,
+        "utcOffset": -5,
+        "heightKm": 4000,
+        "stickHeight": 1
+      },
+      "expected": {
+        "terms": {
+          "declination": -15.147988272214837,
+          "equationOfTime": 16.4481206148007
+        },
+        "snapshot": {
+          "inputMinutes": 1439,
+          "solarMinutes": 19.4481206148007,
+          "globe": {
+            "altitude": -64.10040734543878,
+            "azimuth": 10.795244445074786,
+            "hourAngle": -175.13796984629982
+          },
+          "flat": {
+            "altitude": 13.12106159310537,
+            "azimuth": 3.3105225578946147,
+            "hourAngle": -175.13796984629982,
+            "observerRadius": 5481.909883576745,
+            "sunTrackRadius": 11691.92284275185,
+            "horizontalDistance": 17160.398275685082,
+            "slantDistance": 17620.421929685326
+          }
+        },
+        "events": {
+          "type": "normal",
+          "rise": 409.1886260573618,
+          "set": 1030.8113739426383
+        },
+        "eventInputMinutes": {
+          "rise": 388.740505442561,
+          "set": 1010.3632533278378
+        },
+        "shadows": {
+          "globe": null,
+          "flat": 4.290099568921271
+        }
+      }
+    },
+    {
+      "name": "low local Sun",
+      "input": {
+        "latitude": 54.2,
+        "date": {
+          "year": 2026,
+          "month": 3,
+          "day": 20
+        },
+        "inputMinutes": 1085,
+        "clockMode": false,
+        "longitude": 0,
+        "utcOffset": 0,
+        "heightKm": 10,
+        "stickHeight": 1
+      },
+      "expected": {
+        "terms": {
+          "declination": -0.04399446918288479,
+          "equationOfTime": -7.464142157919923
+        },
+        "snapshot": {
+          "inputMinutes": 1085,
+          "solarMinutes": 1085,
+          "globe": {
+            "altitude": -0.7668440882128384,
+            "azimuth": 270.9881516361273,
+            "hourAngle": 91.25
+          },
+          "flat": {
+            "altitude": 0.05278207028399332,
+            "azimuth": 292.75795870733725,
+            "hourAngle": 91.25,
+            "observerRadius": 3980.7783738752028,
+            "sunTrackRadius": 10012.435359783845,
+            "horizontalDistance": 10855.156494775572,
+            "slantDistance": 10855.161100880461
+          }
+        },
+        "events": {
+          "type": "normal",
+          "rise": 354.54549363095214,
+          "set": 1085.454506369048
+        },
+        "eventInputMinutes": {
+          "rise": 354.545493630952,
+          "set": 1085.454506369048
+        },
+        "shadows": {
+          "globe": null,
+          "flat": 1085.5156494775572
+        }
+      }
+    },
+    {
+      "name": "high local Sun",
+      "input": {
+        "latitude": 54.2,
+        "date": {
+          "year": 2026,
+          "month": 3,
+          "day": 20
+        },
+        "inputMinutes": 1085,
+        "clockMode": false,
+        "longitude": 0,
+        "utcOffset": 0,
+        "heightKm": 100000,
+        "stickHeight": 1
+      },
+      "expected": {
+        "terms": {
+          "declination": -0.04399446918288479,
+          "equationOfTime": -7.464142157919923
+        },
+        "snapshot": {
+          "inputMinutes": 1085,
+          "solarMinutes": 1085,
+          "globe": {
+            "altitude": -0.7668440882128384,
+            "azimuth": 270.9881516361273,
+            "hourAngle": 91.25
+          },
+          "flat": {
+            "altitude": 83.80471141572826,
+            "azimuth": 292.75795870733725,
+            "hourAngle": 91.25,
+            "observerRadius": 3980.7783738752028,
+            "sunTrackRadius": 10012.435359783845,
+            "horizontalDistance": 10855.156494775572,
+            "slantDistance": 100587.44664482775
+          }
+        },
+        "events": {
+          "type": "normal",
+          "rise": 354.54549363095214,
+          "set": 1085.454506369048
+        },
+        "eventInputMinutes": {
+          "rise": 354.545493630952,
+          "set": 1085.454506369048
+        },
+        "shadows": {
+          "globe": null,
+          "flat": 0.1085515649477558
+        }
+      }
+    }
+  ]
+}
