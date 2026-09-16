@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Compare the observed solar path predicted by globe geometry with a clearly defined hypothetical flat-Earth local-Sun model.">
+  <meta name="theme-color" content="#07111f">
+  <title>Solar Path Lab</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2307111f'/%3E%3Cpath d='M8 45h48' stroke='%236ee7f2' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M16 42a16 16 0 0 1 32 0' fill='none' stroke='%23f6c85f' stroke-width='4'/%3E%3Ccircle cx='44' cy='22' r='6' fill='%23f6c85f'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to comparison</a>
+
+  <header class="site-header">
+    <a class="brand" href="#main" aria-label="Solar Path Lab home">
+      <span class="brand-mark" aria-hidden="true"><span></span></span>
+      <span>Solar Path Lab</span>
+    </a>
+    <nav aria-label="Page sections">
+      <a href="#day-path">Whole day</a>
+      <a href="#shadow-test">Shadow test</a>
+      <a href="#table-section">Table</a>
+      <a href="#method">How it works</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="intro wrap" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">One sky · two predictions</p>
+        <h1 id="page-title">Where should the Sun actually appear?</h1>
+        <p class="lede">Choose a latitude, date and time. The blue result uses the same globe geometry as standard Sun-path calculators. The amber result uses one stated flat-plane model with a nearby Sun. Then compare both with a shadow you can measure.</p>
+      </div>
+      <div class="trust-note">
+        <span class="trust-icon" aria-hidden="true">↗</span>
+        <p><strong>No photograph is required.</strong> A vertical stick, its shadow and the time are enough to test the predicted solar altitude.</p>
+      </div>
+    </section>
+
+    <section class="control-shell" aria-labelledby="controls-title">
+      <div class="controls wrap">
+        <div class="control-heading">
+          <div>
+            <p class="step-label">Set the observation</p>
+            <h2 id="controls-title">Move through a real day</h2>
+          </div>
+          <div class="preset-row" aria-label="Quick tests">
+            <button class="chip is-active" type="button" data-preset="sunset">Observed sunset</button>
+            <button class="chip" type="button" data-preset="noon">Solar noon</button>
+            <button class="chip" type="button" data-preset="midnight">Midnight</button>
+          </div>
+        </div>
+
+        <div class="control-grid">
+          <div class="field field-latitude">
+            <div class="field-label">
+              <label for="latitude">Latitude</label>
+              <output id="latitude-output" for="latitude latitude-number">54.2° N</output>
+            </div>
+            <input id="latitude" type="range" min="-80" max="80" step="0.1" value="54.2">
+            <div class="range-ends" aria-hidden="true"><span>80° S</span><span>Equator</span><span>80° N</span></div>
+            <label class="sr-only" for="latitude-number">Latitude in decimal degrees</label>
+            <input id="latitude-number" class="compact-number" type="number" min="-80" max="80" step="0.1" value="54.2" inputmode="decimal">
+          </div>
+
+          <div class="field">
+            <label for="date">Date</label>
+            <input id="date" type="date" value="2026-03-20">
+            <p class="field-help" id="date-note">Solar declination: <span id="declination-value">0.0°</span></p>
+          </div>
+
+          <div class="field field-height">
+            <label for="sun-height">Flat-model Sun height</label>
+            <div class="input-with-unit">
+              <input id="sun-height" type="number" min="10" max="100000" step="10" value="4000" inputmode="decimal">
+              <select id="height-unit" aria-label="Sun height unit">
+                <option value="mi" selected>miles</option>
+                <option value="km">km</option>
+              </select>
+            </div>
+            <p class="field-help">Held constant above the plane</p>
+          </div>
+        </div>
+
+        <div class="time-control">
+          <div class="time-readout">
+            <div>
+              <label for="time">Local solar time</label>
+              <p class="field-help">12:00 means the Sun is on your local meridian</p>
+            </div>
+            <output id="time-output" for="time">18:06</output>
+          </div>
+          <input id="time" type="range" min="0" max="1440" step="1" value="1086">
+          <div class="time-ticks" aria-hidden="true"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>
+          <div class="time-actions">
+            <button id="play-day" class="secondary-button" type="button"><span aria-hidden="true">▶</span> Play the day</button>
+            <button id="clock-settings-button" class="text-button" type="button" aria-expanded="false" aria-controls="clock-settings">Use a clock time instead</button>
+          </div>
+
+          <div id="clock-settings" class="clock-settings" hidden>
+            <div class="clock-copy">
+              <strong>Clock-time test</strong>
+              <p>Enter longitude and the clock’s UTC offset. The Equation of Time is applied automatically.</p>
+            </div>
+            <div class="mini-field">
+              <label for="longitude">Longitude</label>
+              <div class="suffix-input"><input id="longitude" type="number" min="-180" max="180" step="0.1" value="-4.5"><span>° +E/−W</span></div>
+            </div>
+            <div class="mini-field">
+              <label for="utc-offset">UTC offset</label>
+              <div class="suffix-input"><input id="utc-offset" type="number" min="-12" max="14" step="0.5" value="0"><span>hours</span></div>
+            </div>
+            <button id="time-basis-toggle" class="mode-button" type="button" aria-pressed="false">Currently using solar time</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="results wrap" aria-labelledby="results-title">
+      <div class="section-heading split-heading">
+        <div>
+          <p class="step-label">The immediate comparison</p>
+          <h2 id="results-title">Two models point to different places</h2>
+        </div>
+        <p id="time-context" class="context-pill">At observed sunset · 18:06 solar time</p>
+      </div>
+
+      <div id="verdict" class="verdict" role="status" aria-live="polite">
+        <div class="verdict-symbol" aria-hidden="true">!</div>
+        <p><strong id="verdict-title">At the observed sunset, the flat model still places the Sun well above the plane.</strong> <span id="verdict-detail">No perspective rule makes it cross the horizontal.</span></p>
+      </div>
+
+      <div class="model-grid">
+        <article class="model-card globe-card" aria-labelledby="globe-title">
+          <div class="model-card-head">
+            <div>
+              <p class="model-kicker"><span class="swatch swatch-globe"></span> Standard solar geometry</p>
+              <h3 id="globe-title">Globe prediction</h3>
+            </div>
+            <span id="globe-visibility" class="status-badge">At horizon</span>
+          </div>
+          <svg id="globe-sky" class="sky-view" viewBox="0 0 560 270" role="img" aria-labelledby="globe-sky-title globe-sky-desc">
+            <title id="globe-sky-title">Globe-model Sun elevation</title>
+            <desc id="globe-sky-desc">A side-on sky diagram showing the Sun relative to the observer's horizontal.</desc>
+          </svg>
+          <div class="angle-readouts">
+            <div><span>Altitude</span><strong id="globe-altitude">−0.8°</strong></div>
+            <div><span>Azimuth</span><strong id="globe-azimuth">270.0° W</strong></div>
+          </div>
+          <p id="globe-plain" class="plain-result">The upper edge of the Sun is disappearing at the horizon.</p>
+        </article>
+
+        <article class="model-card flat-card" aria-labelledby="flat-title">
+          <div class="model-card-head">
+            <div>
+              <p class="model-kicker"><span class="swatch swatch-flat"></span> Hypothetical local Sun</p>
+              <h3 id="flat-title">Flat-plane prediction</h3>
+            </div>
+            <span id="flat-visibility" class="status-badge status-warn">Above plane</span>
+          </div>
+          <svg id="flat-sky" class="sky-view" viewBox="0 0 560 270" role="img" aria-labelledby="flat-sky-title flat-sky-desc">
+            <title id="flat-sky-title">Flat-model Sun elevation</title>
+            <desc id="flat-sky-desc">A side-on diagram showing the elevated local Sun's line of sight over a flat plane.</desc>
+          </svg>
+          <div class="angle-readouts">
+            <div><span>Altitude</span><strong id="flat-altitude">24.0°</strong></div>
+            <div><span>Azimuth</span><strong id="flat-azimuth">270.0° W</strong></div>
+          </div>
+          <p id="flat-plain" class="plain-result">The Sun remains plainly above the horizontal line of sight.</p>
+        </article>
+      </div>
+
+      <div class="difference-strip" aria-label="Difference between predictions">
+        <span>Altitude gap</span>
+        <strong id="altitude-gap">24.8°</strong>
+        <span id="gap-explanation">That is about 50 apparent Sun-widths.</span>
+      </div>
+    </section>
+
+    <section id="day-path" class="section-panel day-section" aria-labelledby="day-title">
+      <div class="wrap">
+        <div class="section-heading split-heading">
+          <div>
+            <p class="step-label">See the full pattern</p>
+            <h2 id="day-title">Follow both predictions for 24 hours</h2>
+          </div>
+          <div class="legend" aria-label="Chart legend">
+            <span><i class="legend-line globe-line"></i>Globe</span>
+            <span><i class="legend-line flat-line"></i>Flat local Sun</span>
+            <span><i class="legend-line horizon-line"></i>Horizon</span>
+          </div>
+        </div>
+        <div class="chart-card">
+          <svg id="day-chart" viewBox="0 0 1000 460" role="img" aria-labelledby="day-chart-title day-chart-desc">
+            <title id="day-chart-title">Solar altitude over one day</title>
+            <desc id="day-chart-desc">A line chart comparing globe and flat-model solar altitude throughout the selected day.</desc>
+          </svg>
+          <div id="chart-tooltip" class="chart-tooltip" hidden></div>
+        </div>
+        <div class="chart-summary">
+          <div><span>Observed-model sunrise</span><strong id="sunrise-value">06:04</strong></div>
+          <div><span>Observed-model sunset</span><strong id="sunset-value">18:10</strong></div>
+          <div><span>Flat model’s lowest Sun</span><strong id="flat-min-value">19.7°</strong></div>
+          <div class="chart-conclusion"><span>Does the flat Sun set?</span><strong id="flat-sets-value">No</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="shadow-test" class="wrap test-section" aria-labelledby="shadow-title">
+      <div class="section-heading">
+        <p class="step-label">Test it without special equipment</p>
+        <h2 id="shadow-title">What would a vertical stick show?</h2>
+        <p>A level surface, a known stick height and a measured shadow turn solar altitude into a direct observation.</p>
+      </div>
+
+      <div class="shadow-layout">
+        <div class="shadow-control-card">
+          <label for="stick-height">Stick height</label>
+          <div class="input-with-unit stick-input">
+            <input id="stick-height" type="number" min="0.1" max="1000" step="0.1" value="1" inputmode="decimal">
+            <select id="stick-unit" aria-label="Stick height unit">
+              <option value="m" selected>metres</option>
+              <option value="ft">feet</option>
+            </select>
+          </div>
+          <div class="shadow-fact">
+            <span>Measured altitude formula</span>
+            <strong>altitude = arctan(stick ÷ shadow)</strong>
+          </div>
+          <p class="muted">Keep the stick vertical and measure on level ground. Buildings, hills and atmospheric refraction matter close to the horizon.</p>
+        </div>
+
+        <div class="shadow-visual-card">
+          <svg id="shadow-diagram" viewBox="0 0 760 330" role="img" aria-labelledby="shadow-diagram-title shadow-diagram-desc">
+            <title id="shadow-diagram-title">Predicted stick shadows</title>
+            <desc id="shadow-diagram-desc">A diagram comparing the shadow expected from the globe-model Sun and the flat-model Sun.</desc>
+          </svg>
+          <div class="shadow-results">
+            <div class="globe-result"><span>Globe prediction</span><strong id="globe-shadow">No direct Sun</strong></div>
+            <div class="flat-result"><span>Flat prediction</span><strong id="flat-shadow">2.2 m shadow</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-panel perspective-section" aria-labelledby="perspective-title">
+      <div class="wrap perspective-layout">
+        <div class="section-heading">
+          <p class="step-label">What perspective really predicts</p>
+          <h2 id="perspective-title">Lower in the view, smaller in apparent size—but still above the plane</h2>
+          <p>For an elevated local Sun, perspective is already contained in the line-of-sight triangle. As horizontal distance grows, its viewing angle approaches 0° but does not become negative. Its stated height above the plane never changes; only its apparent direction and size do.</p>
+          <div id="perspective-callout" class="formula-callout">flat altitude = arctan(height ÷ horizontal distance)</div>
+        </div>
+
+        <div class="perspective-card">
+          <svg id="perspective-diagram" viewBox="0 0 680 350" role="img" aria-labelledby="perspective-diagram-title perspective-diagram-desc">
+            <title id="perspective-diagram-title">Perspective geometry of the local Sun</title>
+            <desc id="perspective-diagram-desc">A right triangle joining an observer to a local Sun above a flat plane.</desc>
+          </svg>
+          <div class="distance-row">
+            <div><span>Horizontal distance</span><strong id="horizontal-distance">7,800 mi</strong></div>
+            <div><span>Slant distance</span><strong id="slant-distance">8,800 mi</strong></div>
+          </div>
+          <div class="size-comparison">
+            <div>
+              <span>Globe model</span>
+              <div class="sun-size-row"><i class="sun-disc actual-disc"></i><strong>≈ 0.53° all day</strong></div>
+            </div>
+            <div>
+              <span>Flat model, calibrated to 0.53° at noon</span>
+              <div class="sun-size-row"><i id="flat-sun-disc" class="sun-disc flat-disc"></i><strong id="flat-angular-size">0.38° now</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="table-section" class="wrap table-section" aria-labelledby="table-title">
+      <div class="section-heading split-heading">
+        <div>
+          <p class="step-label">Numbers for checking</p>
+          <h2 id="table-title">Altitude and azimuth through the day</h2>
+        </div>
+        <p class="muted table-note">Azimuth is measured clockwise from true north.</p>
+      </div>
+      <div class="table-wrap" tabindex="0" role="region" aria-label="Scrollable solar angle comparison table">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Solar time</th>
+              <th scope="col">Globe altitude</th>
+              <th scope="col">Globe azimuth</th>
+              <th scope="col">Flat altitude</th>
+              <th scope="col">Flat azimuth</th>
+              <th scope="col">Altitude gap</th>
+              <th scope="col">Direct observation</th>
+            </tr>
+          </thead>
+          <tbody id="comparison-table"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="method" class="method-section" aria-labelledby="method-title">
+      <div class="wrap">
+        <div class="section-heading">
+          <p class="step-label">For anyone who wants to inspect the assumptions</p>
+          <h2 id="method-title">Show the model and calculations</h2>
+        </div>
+
+        <div class="details-grid">
+          <details open>
+            <summary>Exactly what is being compared?</summary>
+            <div class="details-body">
+              <p><strong>Globe model:</strong> a distant Sun, a spherical Earth and the standard relationship between latitude, solar declination and hour angle.</p>
+              <p><strong>Flat model:</strong> a north-pole-centred azimuthal-equidistant plane. The Sun circles the north pole once per solar day at a fixed height. Its ground-track radius follows the real solar declination so it can mimic the seasons as generously as possible.</p>
+              <p class="caution"><strong>Important:</strong> “Flat Earth” has no single agreed mathematical model. These results apply to this explicit model; changing it means stating and testing new assumptions.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Globe calculation</summary>
+            <div class="details-body formula-list">
+              <p><span>Solar hour angle</span><code>H = 15° × (local solar time − 12)</code></p>
+              <p><span>Solar altitude</span><code>sin a = sin φ sin δ + cos φ cos δ cos H</code></p>
+              <p><span>Shadow length</span><code>L = stick height ÷ tan a</code></p>
+              <p>Here <em>φ</em> is latitude and <em>δ</em> is the Sun’s declination for the selected date. Sunrise and sunset use the conventional −0.833° centre altitude, which allows for the Sun’s radius and average horizon refraction.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Flat-plane calculation</summary>
+            <div class="details-body formula-list">
+              <p><span>Observer radius from north pole</span><code>rₒ = R × (90° − φ)</code></p>
+              <p><span>Sun-track radius</span><code>rₛ = R × (90° − δ)</code></p>
+              <p><span>Horizontal distance</span><code>d = √(rₒ² + rₛ² − 2rₒrₛ cos θ)</code></p>
+              <p><span>Viewing altitude</span><code>a = arctan(height ÷ d)</code></p>
+              <p>The plane uses <em>R = 6,371 km</em> only as a map scale. The viewing formula itself is ordinary Euclidean geometry.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Clock time and the Equation of Time</summary>
+            <div class="details-body">
+              <p>A clock is not a sundial. Longitude, time-zone offset and the Equation of Time shift clock noon away from apparent solar noon. In “clock time” mode this app converts the selected clock reading before calculating either model.</p>
+              <div class="live-method-values">
+                <span>Equation of Time on this date</span><strong id="eot-value">−7.4 minutes</strong>
+              </div>
+              <p>The Equation of Time varies because Earth’s axis is tilted and its orbit is slightly elliptical. It changes <em>when</em> the Sun reaches the meridian; it does not rescue a local elevated Sun from the geometric sunset problem.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Accuracy and limits</summary>
+            <div class="details-body">
+              <p>This is an educational comparison, not a survey instrument. The solar-coordinate method is the U.S. Naval Observatory’s approximately one-arcminute algorithm for dates within two centuries of 2000. Terrain, observer height, weather and changing refraction can still move an observed horizon crossing.</p>
+              <p>The strongest comparisons are made well away from a blocked horizon, or by measuring a noon shadow over several dates.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="sources-card">
+          <p><strong>Calculation references</strong></p>
+          <a href="https://aa.usno.navy.mil/faq/sun_approx" target="_blank" rel="noreferrer">U.S. Naval Observatory: approximate solar coordinates <span aria-hidden="true">↗</span></a>
+          <a href="https://aa.usno.navy.mil/faq/alt_az" target="_blank" rel="noreferrer">U.S. Naval Observatory: altitude and azimuth <span aria-hidden="true">↗</span></a>
+          <a href="https://aa.usno.navy.mil/faq/RST_defs" target="_blank" rel="noreferrer">U.S. Naval Observatory: rise and set definitions <span aria-hidden="true">↗</span></a>
+          <a href="https://aa.usno.navy.mil/faq/eqtime" target="_blank" rel="noreferrer">U.S. Naval Observatory: Equation of Time <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-inner">
+      <p><strong>Solar Path Lab</strong> keeps assumptions visible so every prediction can be checked.</p>
+      <a href="#main">Back to controls ↑</a>
+    </div>
+  </footer>
+
+  <noscript><div class="noscript">This comparison needs JavaScript to update the diagrams and calculations.</div></noscript>
+  <script src="./app.js" defer></script>
+</body>
+</html>
