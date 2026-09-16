@@ -5,17 +5,18 @@
 The main purpose of Solar Path Lab is to make the differences in predicted Sun
 paths and angles between spherical-Earth solar geometry and an explicitly stated
 hypothetical flat-Earth model obvious. These tests preserve the current numerical
-comparison while the calculation core is extracted. Future analemma and orbital
+comparison after extraction into `src/core/`. Future analemma and orbital
 views should support that comparison rather than replace it.
 
 Run from the repository root with Node.js 22 or newer (verified on 24.14.1):
 
 ```sh
-node --test tests/prototype.test.cjs
+npm test
 ```
 
-No npm install, external packages or build step are required. Node is a development
-test tool; the deployed app still uses only static HTML, CSS and JavaScript.
+No npm install or external packages are required. The suite builds in a temporary
+directory and cleans it up. Run `npm run build` to regenerate the real `dist/`.
+Node is a development tool; deployment remains static HTML, CSS and native ES modules.
 
 ## What the baseline means
 
@@ -39,21 +40,24 @@ field's native units. This is a floating-point regression tolerance, not an
 astronomical accuracy target. Future independent reference tests need their own
 scientific tolerances and explicit assumptions.
 
-## Temporary test bridge
+## Direct calculation imports and build tests
 
-`support/prototype.cjs` loads the actual app into an isolated Node VM and replaces
-only its startup calls in memory with access to existing calculation functions.
-The source file on disk is untouched. A minimal element-lookup stub permits the
-closure to load; startup, event handling and rendering are not run.
+The tests import `src/core/index.js` directly. `support/prototype.cjs` only
+assembles result records from those functions. The temporary VM/startup bridge
+has been removed; no DOM stubs or alternate calculation formulas are used.
 
-The adapter adds no alternative calculation formulas. Its exact startup anchor
-must match once or it fails loudly. After source-module extraction, replace this
-bridge with imports of the calculation core while retaining the fixed fixtures.
+Clock mode is explicit in each input record (`inputs.clockMode`), not global
+calculation state. Additional core tests cover isolated calls and the prototype's
+scenario-specific angular-size calibration.
 
-Two negative controls deliberately change the flat-map radius and longitude sign
-in memory. The fixtures must reject both altered implementations. This checks
-that the regression suite detects numerical changes rather than comparing the
-implementation with freshly regenerated expectations.
+Two negative controls deliberately perturb local-Sun height and longitude sign
+in the input records. The fixed fixtures must reject the changed outputs. These
+are fixture-sensitivity checks, not implementation mutation tests.
+
+The build test verifies the exact output allowlist, removal of stale output,
+byte equality with source, identical hashes over two builds, module dependencies,
+the HTML module entry point, and execution of the built calculation graph. It runs
+from a different working directory to check script-relative path handling.
 
 ## Known gaps and change policy
 
@@ -68,5 +72,6 @@ document before/after results and the relevant specification change, then update
 only affected expectations. Keep legacy defects explicitly labelled until replaced
 with tests for the corrected behavior.
 
-Scope of this change: test infrastructure and documentation only. No application
-calculations, model assumptions, interface behavior or visual presentation changed.
+Scope of the extraction: source organization, explicit calculation inputs, native
+module loading, a copy build, and direct-import tests. No intentional changes to
+numerical formulas, model assumptions, UI behavior or visual presentation.

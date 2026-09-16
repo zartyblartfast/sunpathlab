@@ -194,14 +194,21 @@ The Equation of Time changes when the Sun crosses the local meridian. It does no
 
 ## Running the app locally
 
-The current application is dependency-free and does not require a build process.
+The application has no runtime or npm-package dependencies. Development uses
+Node.js 22 or newer and a minimal copy build; no framework or bundler is required.
 
 Clone the repository:
 
 ```bash
 git clone https://github.com/zartyblartfast/sunpathlab.git
 cd sunpathlab
+npm test
+npm run build
 ```
+
+No `npm install` is necessary. Edit `src/`, then rebuild. The build replaces
+`dist/` with an explicit allowlist of source assets and calculation modules;
+do not keep hand-authored changes or local files in `dist/`.
 
 On Windows, start a local web server with:
 
@@ -221,16 +228,23 @@ http://localhost:8000
 
 Because the app uses only HTML, CSS and JavaScript, it can also be hosted by any ordinary static-file web server.
 
+Serve it over HTTP(S), not by double-clicking `index.html`: the browser loads
+native ES modules. Deploy the entire generated `dist/` directory, including
+`core/`, with JavaScript MIME types. The existing hosting configuration still
+serves `dist/`. Generated output remains tracked in Git; rebuild before committing
+source changes.
+
 ## Prototype regression tests
 
 With Node.js 22 or newer, run from the repository root:
 
 ```bash
-node --test tests/prototype.test.cjs
+npm test
 ```
 
-No package installation is needed. These characterization tests preserve the
-prototype's numerical outputs; they are not independent scientific validation.
+No package installation is needed. Tests cover the numerical characterization
+baseline, explicit calculation inputs, and reproducible allowlisted builds.
+They are not independent scientific validation.
 See [tests/README.md](tests/README.md) for provenance, coverage and known gaps.
 
 ## Repository structure
@@ -239,28 +253,39 @@ See [tests/README.md](tests/README.md) for provenance, coverage and known gaps.
 sunpathlab/
 ├── .openai/
 │   └── hosting.json
-├── dist/
+├── package.json
+├── scripts/
+│   └── build.mjs
+├── src/
 │   ├── index.html
 │   ├── styles.css
-│   └── app.js
+│   ├── app.js
+│   └── core/              # Pure calculation modules
+├── dist/                  # Generated static deployment output
 └── tests/
     ├── README.md
     ├── prototype.test.cjs
+    ├── core.test.mjs
+    ├── build.test.mjs
     ├── fixtures/
     │   └── prototype-v0.1.json
     └── support/
         └── prototype.cjs
 ```
 
-- `dist/index.html` contains the interface and explanatory content.
-- `dist/styles.css` contains the visual design and responsive layout.
-- `dist/app.js` contains the calculations, state management and diagram rendering.
+- `src/index.html` contains the interface and explanatory content.
+- `src/styles.css` contains the visual design and responsive layout.
+- `src/app.js` contains input handling, formatting, UI state and diagram rendering.
+- `src/core/` contains solar coordinates, time conversion, globe and flat geometry,
+  shadow calculations, daily snapshots, and shared constants/helpers.
+- `scripts/build.mjs` generates `dist/`; only explicitly listed assets are shipped.
 - `.openai/hosting.json` contains the existing deployment configuration.
 
-The project was initially exported as a compact static application. Prototype
-characterization tests now preserve its numerical baseline. A future development
-task may introduce a separate `src` directory, independent calculation validation
-and a repeatable build process while retaining static deployment.
+The prototype's calculations have been extracted without intentional numerical
+changes. Tests import the calculation modules directly; the original fixture
+data remains unchanged. Independent scientific validation and known-defect fixes
+are still pending. This is a foundation for milestone 0.2, not completion of its
+validation, CI or broader source-organization work.
 
 ## Accuracy and limitations
 

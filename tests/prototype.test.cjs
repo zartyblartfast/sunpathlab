@@ -1,9 +1,9 @@
 const assert = require("node:assert/strict");
-const fs = require("node:fs");
-const path = require("node:path");
-const { test } = require("node:test");
-const { loadPrototype, evaluateCase } = require("./support/prototype.cjs");
+const { test, before } = require("node:test");
+const { evaluateCase } = require("./support/prototype.cjs");
 const baseline = require("./fixtures/prototype-v0.1.json");
+let core;
+before(async () => { core = await import("../src/core/index.js"); });
 
 // Tight regression tolerance, NOT a statement of astronomical accuracy.
 function compare(actual, expected, label = "result") {
@@ -23,7 +23,7 @@ function compare(actual, expected, label = "result") {
 
 for (const fixture of baseline.cases) {
   test(`prototype baseline: ${fixture.name}`, () => {
-    compare(evaluateCase(loadPrototype(), fixture.input), fixture.expected);
+    compare(evaluateCase(core, fixture.input), fixture.expected);
   });
 }
 
@@ -34,7 +34,7 @@ test("baseline explicitly identifies prototype provenance, not an ephemeris orac
 });
 
 test("baseline preserves the daily curve's 24:00 closing copy of 00:00", () => {
-  const api = loadPrototype();
+  const api = core;
   const input = baseline.cases[0].input;
   const start = evaluateCase(api, { ...input, inputMinutes: 0 });
   const end = evaluateCase(api, { ...input, inputMinutes: 1440 });
@@ -44,7 +44,7 @@ test("baseline preserves the daily curve's 24:00 closing copy of 00:00", () => {
 });
 
 test("baseline records legacy arbitrary overhead azimuths, NOT desired behavior", () => {
-  const api = loadPrototype();
+  const api = core;
   compare(api.globePosition(0, 0, 720), { altitude: 90, azimuth: 180, hourAngle: 0 });
   const flat = api.flatPosition(0, 0, 720, 4000);
   compare(flat.altitude, 90);
@@ -54,24 +54,20 @@ test("baseline records legacy arbitrary overhead azimuths, NOT desired behavior"
 });
 
 test("baseline records the existing parallel-ray shadow approximation", () => {
-  const api = loadPrototype();
+  const api = core;
   compare(api.shadowLength(1000, 45), 1000);
   assert.equal(api.shadowLength(1, 0), null);
   assert.equal(api.shadowLength(1, -1), null);
 });
 
-// Negative controls: change only an in-memory copy of the app. Fixed fixtures
-// must reject altered model geometry and time signs; never modify deployment files.
+// Real core imports with perturbed inputs: fixture sensitivity, not source mutation.
 for (const mutation of [
-  { name: "flat-map radius", before: "const EARTH_RADIUS_KM = 6371;", after: "const EARTH_RADIUS_KM = 6000;", caseIndex: 0 },
-  { name: "clock longitude sign", before: "inputMinutes + inputs.terms.equationOfTime + 4 * inputs.longitude", after: "inputMinutes + inputs.terms.equationOfTime - 4 * inputs.longitude", caseIndex: 9 }
+  { name: "flat Sun height", change: (input) => ({ ...input, heightKm: input.heightKm * 0.9 }), caseIndex: 0 },
+  { name: "clock longitude sign", change: (input) => ({ ...input, longitude: -input.longitude }), caseIndex: 9 }
 ]) {
   test(`negative control: baseline rejects changed ${mutation.name}`, () => {
-    const source = fs.readFileSync(path.join(__dirname, "../dist/app.js"), "utf8");
-    assert.ok(source.includes(mutation.before), "Mutation anchor changed; review the negative control");
-    const api = loadPrototype(source.replace(mutation.before, mutation.after));
     const fixture = baseline.cases[mutation.caseIndex];
-    assert.throws(() => compare(evaluateCase(api, fixture.input), fixture.expected),
+    assert.throws(() => compare(evaluateCase(core, mutation.change(fixture.input)), fixture.expected),
       { code: "ERR_ASSERTION" });
   });
 }
